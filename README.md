@@ -8,7 +8,7 @@ The bridge lets Python tools start, control and watch sandboxed programs from ou
 
 ## Build and test
 
-    pip install -e python-bridge
+    pip install -e 'python-bridge[dev]'
     pytest python-bridge/tests
 
 ## Licence
