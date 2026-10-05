@@ -1,123 +1,16 @@
-# The Godot ENet Sandbox - Monorepo
+# entities-godot-enet-sandbox
 
-A complete Godot 4.7 ENet sandbox with RISC-V integration, Python bridge, and JSON-RPC protocol.
+A Python bridge that speaks JSON-RPC 2.0 over ENet to sandboxed programs in a running Godot instance.
 
-## Structure
+## What it is for
 
-```
-monorepo/
-├── godot-sandbox/           # Godot 4.7 project (source + binaries)
-│   ├── bin/                 # Build artifacts (libgodot_riscv.so, hello_world.elf)
-│   ├── ext/godot-cpp/       # godot-cpp interface (referenced, not vendored)
-│   └── project.godot        # Godot project file
-├── python-bridge/           # Python ENet bridge (async JSON-RPC 2.0 client/server)
-├── riscv-toolchain/         # RISC-V toolchain
-│   └── libriscv/            # libriscv source (clean-room implementation)
-├── docs/                    # Documentation
-│   └── protocol.md          # JSON-RPC API specification
-└── .github/workflows/       # CI/CD workflows
-```
+The bridge lets Python tools start, control and watch sandboxed programs from outside the engine. The engine-side build files at the root describe the RISC-V sandbox extension, but the sources they compile are not in this repository, so the Python bridge is the part that builds from this tree.
 
-## Components
+## Build and test
 
-| Directory | Purpose | Status |
-|-----------|---------|--------|
-| `godot-sandbox/` | Godot 4.7 ENet sandbox scene | ✅ Complete |
-| `godot-sandbox/bin/` | Compiled `.so` + `.elf` binaries | 📦 Gitignored |
-| `godot-sandbox/ext/godot-cpp/` | godot-cpp GDExtension interface | ⚠️ Referenced external |
-| `python-bridge/` | Python async ENet bridge | ✅ Complete |
-| `riscv-toolchain/libriscv/` | RISC-V emulator (clean-room) | ✅ Complete |
-| `docs/` | Documentation | ✅ Complete |
-| `tests/` | Unit/integration tests | 📋 Pending |
+    pip install -e python-bridge
+    pytest python-bridge/tests
 
-## Quick Start
+## Licence
 
-### Prerequisites
-- Godot 4.7 (headless)
-- Python 3.11+
-- ENet library
-- RISC-V toolchain
-
-### Build
-
-```bash
-# Build the RISC-V hello_world.elf
-cd riscv-toolchain/libriscv
-mkdir -p build && cd build
-cmake ..
-make -j$(nproc)
-
-# Build the GDExtension .so
-cd ../../godot-sandbox/
-scons target=template_release
-
-# Run the Python bridge
-cd ../../python-bridge
-python network_bridge.py
-```
-
-### Run
-
-1. Open `godot-sandbox/` in Godot 4.7
-2. Run the scene (F5)
-3. The Python bridge connects via ENet UDP on port 4000
-
-## Quick Start
-
-### Prerequisites
-- Godot 4.7 (headless)
-- Python 3.11+
-- ENet library
-- RISC-V toolchain
-
-### Build
-
-```bash
-# Build the RISC-V hello_world.elf
-cd riscv-toolchain/libriscv
-mkdir -p build && cd build
-cmake ..
-make -j$(nproc)
-
-# Build the GDExtension .so
-cd ../../godot-sandbox/
-scons target=template_release
-
-# Run the Python bridge
-cd ../../python-bridge
-python network_bridge.py
-```
-
-### Run
-
-1. Open `godot-sandbox/` in Godot 4.7
-2. Run the scene (F5)
-3. The Python bridge connects via ENet UDP on port 4000
-
-## Documentation
-
-- **[Architecture Guide](docs/architecture.md)** - System design and components
-- **[API Reference](docs/api.md)** - JSON-RPC protocol and methods
-- **[Python Bridge Docs](python-bridge/docs/api.md)** - Client and server APIs
-
-## License
-
-MIT License - see LICENSE file for details.
-
-## Publishing to GitHub
-
-```bash
-# Initialize repo
-git init
-git add .
-git commit -m "Initial monorepo: Godot ENet Sandbox"
-
-# Add remote (replace with your repo)
-git remote add origin https://github.com/V-Sekai-fire/godot-enet-sandbox.git
-
-# Create remote repo on GitHub
-gh repo create V-Sekai-fire/godot-enet-sandbox --public --push --source=. --description="Godot 4.7 ENet Sandbox with RISC-V integration and Python bridge"
-
-# Push
-git push -u origin main
-```
+BSD-3-Clause for the repository ([LICENSE](LICENSE)). The Python bridge is MIT ([python-bridge/LICENSE](python-bridge/LICENSE)).
